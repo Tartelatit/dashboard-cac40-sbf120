@@ -73,6 +73,10 @@ top_actions_pea_2025 = {
     "Orange": "ORA.PA",
     "Stellantis": "STLA.PA",
     "Veolia": "VIE.PA",
+    "Technip Energies": "TE.PA",
+    "Maurel et Prom": "MAU.PA",
+    "Teleperformance": "TEP.PA",
+    "Sanofi": "SAN.PA",
     # Ajout des 5 de Café de la Bourse
     "M6 Métropole Télévision": "MMT.PA",
     "Vallourec": "VK.PA",
@@ -578,3 +582,4 @@ with col1:
     st.plotly_chart(fig_rsi, use_container_width=True)
 with col2:
     st.plotly_chart(fig_macd, use_container_width=True)
+
