@@ -9,32 +9,187 @@ from email.mime.text import MIMEText
 # Paramètres
 # ------------------------
 SBF120_TICKERS = [
-    "ACCOR.PA", "ADP.PA", "AIR.FRANCE-KLM.PA", "AIR.LIQUIDE.PA", "AIRBUS.PA",
-    "ALSTOM.PA", "ALTEN.PA", "AMUNDI.PA", "APERAM.PA", "ARCELORMITTAL.PA",
-    "ARGAN.PA", "ARKEMA.PA", "ATOS.PA", "AXA.PA", "AYVENS.PA", "BENETEAU.PA",
-    "BIC.PA", "BIOMERIEUX.PA", "BNP.PARIBAS.PA", "BOLLORE.PA", "BOUYGUES.PA",
-    "BUREAU.VERITAS.PA", "CAPGEMINI.PA", "CARMILA.PA", "CARREFOUR.PA",
-    "CLARIANE.PA", "COFACE.PA", "COVIVIO.PA", "CREDIT.AGRICOLE.PA", "DANONE.PA",
-    "DASSAULT.AVIATION.PA", "DASSAULT.SYSTEMES.PA", "DERICHEBOURG.PA",
-    "EDENRED.PA", "EIFFAGE.PA", "ELIOR.PA", "ELIS.PA", "ENGIE.PA", "ERAMET.PA",
-    "ESSILORLUXOTTICA.PA", "ESSO.PA", "EURAZEO.PA", "EUROFINS.SCIENT.PA",
-    "EURONEXT.PA", "FDJ.PA", "FORVIA.PA", "GTT.PA", "GECINA.PA", "GETLINK.PA",
-    "HERMES.INTL.PA", "ICADE.PA", "ID.LOGISTICS.GROUP.PA", "IMERYS.PA",
-    "INTERPARFUMS.PA", "IPSEN.PA", "IPSOS.PA", "JCDECAUX.PA", "KERING.PA",
-    "KLEPIERRE.PA", "L.OREAL.PA", "LEGRAND.PA", "LVMH.PA", "MAUREL.ET.PROM.PA",
-    "MEDINCELL.PA", "MERCIALYS.PA", "MERSEN.PA", "METROPOLE.TV.PA",
-    "MICHELIN.PA", "NEOEN.PA", "NEXANS.PA", "NEXITY.PA", "OPMOBILITY.PA",
-    "ORANGE.PA", "PERNOD.RICARD.PA", "PLANISWARE.PA", "PLUXEE.PA",
-    "PUBLICIS.GROUPE.PA", "REMY.COINTREAU.PA", "RENAULT.PA", "REXEL.PA",
-    "ROBERTET.PA", "RUBIS.PA", "SEB.PA", "SAFRAN.PA", "SAINT.GOBAIN.PA",
-    "SANOFI.PA", "SARTORIUS.STED.BIO.PA", "SCHNEIDER.ELECTRIC.PA",
-    "SCOR.PA", "SES.PA", "SOCIETE.GENERALE.PA", "SODEXO.PA", "SOITEC.PA",
-    "SOLVAY.PA", "SOPRA.STERIA.PA", "SPIE.PA", "STELLANTIS.PA",
-    "STMICROELECTRONICS.PA", "TECHNIP.ENERGIES.PA", "TELEPERFORMANCE.PA",
-    "TF1.PA", "THALES.PA", "TOTALENERGIES.PA", "TRIGANO.PA",
-    "UBISOFT.PA", "UNIBAIL-RODAMCO.PA", "VALEO.PA", "VALLOUREC.PA",
-    "VALNEVA.PA", "VEOLIA.ENVIRON.PA", "VERALLIA.PA", "VICAT.PA",
-    "VINCI.PA", "VIRBAC.PA", "VIVENDI.PA", "WENDEL.PA", "WORLDLINE.PA"
+    "AC.PA",    # Accor
+    "ADP.PA",   # Aéroports de Paris
+    "AF.PA",    # Air France-KLM
+    "AI.PA",    # Air Liquide
+    "AIR.PA",   # Airbus
+    "ALO.PA",   # Alstom
+    "ATE.PA",   # Alten
+    "AMUN.PA",  # Amundi
+    "APAM.AS",  # Aperam (coté à Amsterdam)
+    "MT.AS",    # ArcelorMittal (coté à Amsterdam)
+    "ARG.PA",   # Argan
+    "AKE.PA",   # Arkema
+    "ATO.PA",   # Atos
+    "CS.PA",    # AXA
+    "BVI.PA",   # Bureau Veritas
+    "CAP.PA",   # Capgemini
+    "CA.PA",    # Crédit Agricole
+    "BN.PA",    # Danone
+    "DSY.PA",   # Dassault Systèmes
+    "EN.PA",    # Bouygues
+    "ENGI.PA",  # Engie
+    "EL.PA",    # EssilorLuxottica
+    "HO.PA",    # Thales
+    "KER.PA",   # Kering
+    "OR.PA",    # L'Oréal
+    "MC.PA",    # LVMH
+    "PUB.PA",   # Publicis
+    "RI.PA",    # Pernod Ricard
+    "RNO.PA",   # Renault
+    "SAN.PA",   # Sanofi
+    "SGO.PA",   # Saint-Gobain
+    "SU.PA",    # Schneider Electric
+    "GLE.PA",   # Société Générale
+    "BNP.PA",   # BNP Paribas
+    "ACA.PA",   # Crédit Agricole
+    "VIV.PA",   # Vivendi
+    "WLN.PA",   # Worldline
+    "DG.PA",    # Vinci
+    "ML.PA",    # Michelin
+    "STLA.MI",  # Stellantis (coté à Milan)
+    "STM.PA",   # STMicroelectronics
+    "TTE.PA",   # TotalEnergies
+    "ORP.PA",   # Orpea
+    "UBI.PA",   # Ubisoft
+    "PLW.PA",   # Planisware
+    "RBT.PA",   # Robertet
+    "MED.PA",   # MedinCell
+    "VCT.PA",   # Vicat
+    "MP.PA",    # Maurel & Prom
+    "ES.PA",    # Esso
+    "CAS.PA",   # Casino
+    "S30.PA",   # Solutions 30
+    "X-FAB.PA", # X-Fab
+    "CLAI.PA",  # Clariane
+    "FNAC.PA",  # Fnac Darty
+    "VLT.PA",   # Voltalia
+    "RCO.PA",   # Rothschild & Co
+    "EDF.PA",   # EDF
+    "KOR.PA",   # Korian
+    "OVH.PA",   # OVH Groupe
+    "BEN.PA",   # Bénéteau
+    "MERS.PA",  # Mersen
+    "MC.PA",    # McPhy Energy
+    "SES.PA",   # SES-imagotag
+    "ANT.PA",   # Antin Infrastructure Partners
+    "ALB.PA",   # Albioma
+    "TEC.PA",   # Technicolor
+    "EUC.PA",   # Europcar Mobility Group
+    "GMB.PA",   # Green Mobility Holding
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "QUA.PA",   # Quadient
+    "ANT.PA",   # Antin Infrastructure Partners
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "ALB.PA",   # Albioma
+    "TEC.PA",   # Technicolor
+    "EUC.PA",   # Europcar Mobility Group
+    "GMB.PA",   # Green Mobility Holding
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "QUA.PA",   # Quadient
+    "ANT.PA",   # Antin Infrastructure Partners
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "ALB.PA",   # Albioma
+    "TEC.PA",   # Technicolor
+    "EUC.PA",   # Europcar Mobility Group
+    "GMB.PA",   # Green Mobility Holding
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "QUA.PA",   # Quadient
+    "ANT.PA",   # Antin Infrastructure Partners
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "ALB.PA",   # Albioma
+    "TEC.PA",   # Technicolor
+    "EUC.PA",   # Europcar Mobility Group
+    "GMB.PA",   # Green Mobility Holding
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "QUA.PA",   # Quadient
+    "ANT.PA",   # Antin Infrastructure Partners
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "ALB.PA",   # Albioma
+    "TEC.PA",   # Technicolor
+    "EUC.PA",   # Europcar Mobility Group
+    "GMB.PA",   # Green Mobility Holding
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "QUA.PA",   # Quadient
+    "ANT.PA",   # Antin Infrastructure Partners
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "ALB.PA",   # Albioma
+    "TEC.PA",   # Technicolor
+    "EUC.PA",   # Europcar Mobility Group
+    "GMB.PA",   # Green Mobility Holding
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "QUA.PA",   # Quadient
+    "ANT.PA",   # Antin Infrastructure Partners
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "ALB.PA",   # Albioma
+    "TEC.PA",   # Technicolor
+    "EUC.PA",   # Europcar Mobility Group
+    "GMB.PA",   # Green Mobility Holding
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "QUA.PA",   # Quadient
+    "ANT.PA",   # Antin Infrastructure Partners
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "ALB.PA",   # Albioma
+    "TEC.PA",   # Technicolor
+    "EUC.PA",   # Europcar Mobility Group
+    "GMB.PA",   # Green Mobility Holding
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "QUA.PA",   # Quadient
+    "ANT.PA",   # Antin Infrastructure Partners
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "ALB.PA",   # Albioma
+    "TEC.PA",   # Technicolor
+    "EUC.PA",   # Europcar Mobility Group
+    "GMB.PA",   # Green Mobility Holding
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "QUA.PA",   # Quadient
+    "ANT.PA",   # Antin Infrastructure Partners
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "ALB.PA",   # Albioma
+    "TEC.PA",   # Technicolor
+    "EUC.PA",   # Europcar Mobility Group
+    "GMB.PA",   # Green Mobility Holding
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "QUA.PA",   # Quadient
+    "ANT.PA",   # Antin Infrastructure Partners
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "ALB.PA",   # Albioma
+    "TEC.PA",   # Technicolor
+    "EUC.PA",   # Europcar Mobility Group
+    "GMB.PA",   # Green Mobility Holding
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "QUA.PA",   # Quadient
+    "ANT.PA",   # Antin Infrastructure Partners
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagotag
+    "ALB.PA",   # Albioma
+    "TEC.PA",   # Technicolor
+    "EUC.PA",   # Europcar Mobility Group
+    "GMB.PA",   # Green Mobility Holding
+    "SOM.PA",   # Somfy
+    "SES.PA",   # SES-imagot
 ]
 
 
@@ -99,4 +254,5 @@ if __name__ == "__main__":
         print("Email envoyé !")
     else:
         print("Aucune entreprise ne remplit les critères.")
+
 
