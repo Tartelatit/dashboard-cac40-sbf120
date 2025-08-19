@@ -6,7 +6,7 @@ from email.message import EmailMessage
 # --- Configuration ---
 PERIOD = "6mo"
 INTERVAL = "1d"
-ticker = [
+TICKERS = [
     # CAC 40 (les 40 plus grandes capitalisations)
     'AC.PA',      # Accor
     'ACA.PA',     # Crédit Agricole
@@ -164,6 +164,7 @@ for ticker in TICKERS:
             subject=f"Alerte Bourse {ticker}",
             body=f"{ticker} a rempli les conditions : RSI={latest_rsi:.2f}, MACD={latest_macd:.2f}, MA50={latest_ma50:.2f}, MA200={latest_ma200:.2f}"
         )
+
 
 
 
