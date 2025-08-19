@@ -6,8 +6,7 @@ from email.message import EmailMessage
 # --- Configuration ---
 PERIOD = "6mo"
 INTERVAL = "1d"
-TICKERS = [
-sbf120_tickers = [
+ticker = [
     # CAC 40 (les 40 plus grandes capitalisations)
     'AC.PA',      # Accor
     'ACA.PA',     # Crédit Agricole
@@ -66,7 +65,6 @@ sbf120_tickers = [
     'KN.PA',      # Kone (France)
     'MMB.PA',     # Maisons du Monde
     'NEX.PA',     # Nexity
-
     # Autres valeurs importantes du SBF 120
     'BIM.PA',     # Biomerieux
     'BVI.PA',     # Bureau Veritas
@@ -89,7 +87,6 @@ sbf120_tickers = [
     'TFI.PA',     # TF1
     'AKW.PA',     # Akwel
     'AM.PA',      # Dassault Aviation
-]
 ]
 EMAIL_SENDER = "leplus.jeremy@gmail.com"
 EMAIL_PASSWORD = "prlg vowq fcew vmtr"  # mot de passe d’application si Gmail
@@ -167,5 +164,6 @@ for ticker in TICKERS:
             subject=f"Alerte Bourse {ticker}",
             body=f"{ticker} a rempli les conditions : RSI={latest_rsi:.2f}, MACD={latest_macd:.2f}, MA50={latest_ma50:.2f}, MA200={latest_ma200:.2f}"
         )
+
 
 
