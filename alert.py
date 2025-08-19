@@ -90,7 +90,7 @@ sbf120_tickers = [
     'AKW.PA',     # Akwel
     'AM.PA',      # Dassault Aviation
 ]
-
+]
 EMAIL_SENDER = "leplus.jeremy@gmail.com"
 EMAIL_PASSWORD = "prlg vowq fcew vmtr"  # mot de passe d’application si Gmail
 EMAIL_RECEIVER = "leplus.jeremy@gmail.com"
@@ -167,4 +167,5 @@ for ticker in TICKERS:
             subject=f"Alerte Bourse {ticker}",
             body=f"{ticker} a rempli les conditions : RSI={latest_rsi:.2f}, MACD={latest_macd:.2f}, MA50={latest_ma50:.2f}, MA200={latest_ma200:.2f}"
         )
+
 
