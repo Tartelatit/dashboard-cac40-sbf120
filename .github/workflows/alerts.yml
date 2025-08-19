@@ -1,1 +1,27 @@
+name: Stock Alerts
 
+on:
+  schedule:
+    - cron: "0 8 * * 1-5"   # tous les jours ouvrés à 8h UTC (10h heure de Paris)
+  workflow_dispatch:        # permet de lancer manuellement
+
+jobs:
+  run-alerts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run alert script
+        run: python alert.py
+        env:
+          EMAIL_USER: ${{ secrets.EMAIL_USER }}
+          EMAIL_PASS: ${{ secrets.EMAIL_PASS }}
+          EMAIL_RECEIVER: ${{ secrets.EMAIL_RECEIVER }}
