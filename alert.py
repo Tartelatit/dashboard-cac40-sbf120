@@ -59,7 +59,7 @@ def check_conditions(ticker):
 
     last = df.iloc[-1]
 
-    cond_rsi = last["rsi"] < 30
+    cond_rsi = last["rsi"] > 30
     cond_macd = last["macd"] > last["signal"]
     cond_mm = last["mm50"] > last["mm200"]
 
@@ -99,3 +99,4 @@ if __name__ == "__main__":
         print("Email envoyé !")
     else:
         print("Aucune entreprise ne remplit les critères.")
+
