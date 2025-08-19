@@ -1,14 +1,12 @@
-import os
 import yfinance as yf
 import pandas as pd
-import ta
 import smtplib
-from email.mime.text import MIMEText
+from email.message import EmailMessage
 
-# ------------------------
-# Paramètres
-# ------------------------
-SBF120_TICKERS = [
+# --- Configuration ---
+PERIOD = "6mo"
+INTERVAL = "1d"
+TICKERS = [
     "AC.PA",    # Accor
     "ADP.PA",   # Aéroports de Paris
     "AF.PA",    # Air France-KLM
@@ -191,68 +189,79 @@ SBF120_TICKERS = [
     "SOM.PA",   # Somfy
     "SES.PA",   # SES-imagot
 ]
+EMAIL_SENDER = "leplus.jeremy@gmail.com"
+EMAIL_PASSWORD = "prlg vowq fcew vmtr"  # mot de passe d’application si Gmail
+EMAIL_RECEIVER = "leplus.jeremy@gmail.com"
 
+# --- Fonctions ---
+def get_close_series(ticker):
+    try:
+        data = yf.download(ticker, period=PERIOD, interval=INTERVAL, auto_adjust=True, progress=False)
+        if data.empty:
+            print(f"Erreur {ticker}: pas de données disponibles")
+            return None
+        close = data['Close']
+        if isinstance(close, pd.DataFrame):
+            close = close.iloc[:,0]  # sécurité 1D
+        return close
+    except Exception as e:
+        print(f"Erreur {ticker}: {e}")
+        return None
 
-PERIOD = "6mo"   # période de données
-INTERVAL = "1d"  # données journalières
+def calculate_rsi(series, period=14):
+    delta = series.diff()
+    gain = delta.where(delta > 0, 0)
+    loss = -delta.where(delta < 0, 0)
+    avg_gain = gain.rolling(period).mean()
+    avg_loss = loss.rolling(period).mean()
+    rs = avg_gain / avg_loss
+    rsi = 100 - (100 / (1 + rs))
+    return rsi
 
-# ------------------------
-# Fonctions
-# ------------------------
-def check_conditions(ticker):
-    data = yf.download(ticker, period=PERIOD, interval=INTERVAL)
-    if data.empty:
-        return False
+def calculate_macd(series, fast=12, slow=26, signal=9):
+    exp1 = series.ewm(span=fast, adjust=False).mean()
+    exp2 = series.ewm(span=slow, adjust=False).mean()
+    macd = exp1 - exp2
+    signal_line = macd.ewm(span=signal, adjust=False).mean()
+    return macd, signal_line
 
-    df = data.copy()
-    df["rsi"] = ta.momentum.RSIIndicator(df["Close"], window=14).rsi()
-    macd = ta.trend.MACD(df["Close"])
-    df["macd"] = macd.macd()
-    df["signal"] = macd.macd_signal()
-    df["mm50"] = df["Close"].rolling(window=50).mean()
-    df["mm200"] = df["Close"].rolling(window=200).mean()
-
-    last = df.iloc[-1]
-
-    cond_rsi = last["rsi"] > 30
-    cond_macd = last["macd"] > last["signal"]
-    cond_mm = last["mm50"] > last["mm200"]
-
-    return cond_rsi and cond_macd and cond_mm
+def calculate_moving_averages(series, windows=[50,200]):
+    ma = {}
+    for w in windows:
+        ma[w] = series.rolling(w).mean()
+    return ma
 
 def send_email(subject, body):
-    sender = os.getenv("EMAIL_USER")
-    password = os.getenv("EMAIL_PASS")
-    receiver = os.getenv("EMAIL_RECEIVER")
+    msg = EmailMessage()
+    msg.set_content(body)
+    msg['Subject'] = subject
+    msg['From'] = EMAIL_SENDER
+    msg['To'] = EMAIL_RECEIVER
 
-    msg = MIMEText(body)
-    msg["Subject"] = subject
-    msg["From"] = sender
-    msg["To"] = receiver
+    with smtplib.SMTP_SSL('smtp.gmail.com', 465) as smtp:
+        smtp.login(EMAIL_SENDER, EMAIL_PASSWORD)
+        smtp.send_message(msg)
+    print("Email envoyé !")
 
-    with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-        server.login(sender, password)
-        server.sendmail(sender, receiver, msg.as_string())
+# --- Exécution ---
+for ticker in TICKERS:
+    close_prices = get_close_series(ticker)
+    if close_prices is None:
+        continue
 
-# ------------------------
-# Script principal
-# ------------------------
-if __name__ == "__main__":
-    matches = []
+    rsi_series = calculate_rsi(close_prices)
+    macd_series, signal_series = calculate_macd(close_prices)
+    ma_dict = calculate_moving_averages(close_prices)
 
-    for ticker in SBF120_TICKERS:
-        try:
-            if check_conditions(ticker):
-                matches.append(ticker)
-        except Exception as e:
-            print(f"Erreur {ticker}: {e}")
+    latest_rsi = rsi_series.iloc[-1]
+    latest_macd = macd_series.iloc[-1]
+    latest_signal = signal_series.iloc[-1]
+    latest_ma50 = ma_dict[50].iloc[-1]
+    latest_ma200 = ma_dict[200].iloc[-1]
 
-    if matches:
-        body = "Les entreprises suivantes remplissent les critères :\n\n"
-        body += "\n".join(matches)
-        send_email("Alerte SBF120", body)
-        print("Email envoyé !")
-    else:
-        print("Aucune entreprise ne remplit les critères.")
-
-
+    if latest_rsi < 30 and latest_macd > latest_signal > latest_ma50 > latest_ma200:
+        print(f"Alerte {ticker}: conditions remplies !")
+        send_email(
+            subject=f"Alerte Bourse {ticker}",
+            body=f"{ticker} a rempli les conditions : RSI={latest_rsi:.2f}, MACD={latest_macd:.2f}, MA50={latest_ma50:.2f}, MA200={latest_ma200:.2f}"
+        )
